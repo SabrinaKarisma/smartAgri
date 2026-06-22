@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Agriculture Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="dashboard">
+        <header>
+            <h1>Smart Agriculture Dashboard</h1>
+            <p>Monitoring & Kontrol Penyiraman Otomatis</p>
+        </header>
+
+        <section class="cards">
+            <div class="card">
+                <div class="card-label">Suhu Udara</div>
+                <div class="card-value" id="tempValue">-- °C</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Kelembapan Udara</div>
+                <div class="card-value" id="humValue">-- %</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Kelembapan Tanah</div>
+                <div class="card-value" id="soilValue">-- %</div>
+            </div>
+            <div class="card">
+                <div class="card-label">Status Sistem</div>
+                <div class="card-value" id="statusValue">--</div>
+            </div>
+        </section>
+
+        <section class="charts">
+            <div class="chart-box">
+                <h3>Suhu (°C)</h3>
+                <canvas id="tempChart"></canvas>
+            </div>
+            <div class="chart-box">
+                <h3>Kelembapan Udara (%)</h3>
+                <canvas id="humChart"></canvas>
+            </div>
+            <div class="chart-box">
+                <h3>Kelembapan Tanah (%)</h3>
+                <canvas id="soilChart"></canvas>
+            </div>
+        </section>
+
+        <section class="history">
+            <h3>Histori Data</h3>
+            <div class="table-wrapper">
+                <table id="historyTable">
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Suhu (°C)</th>
+                            <th>Humidity (%)</th>
+                            <th>Soil (%)</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyBody">
+                        <tr>
+                            <td colspan="5">Memuat data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-actions">
+                <button id="downloadCsvBtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Download Data
+                </button>
+            </div>
+        </section>
+
+        <section class="controls">
+            <button id="waterBtn" class="btn-water">SIRAM SEKARANG</button>
+            <span id="commandStatus"></span>
+        </section>
+
+        <footer>
+            <p>Data diperbarui setiap 5 detik | Sistem IoT Real-Time by Sabrina</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
