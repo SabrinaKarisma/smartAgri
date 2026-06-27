@@ -77,7 +77,6 @@ async function fetchHistory() {
     });
     historyBody.innerHTML = rows;
 
-    // Update charts (ambil data terakhir 50)
     const dataPoints = history.slice(-50);
     const labels = dataPoints.map(d => new Date(d.timestamp).toLocaleTimeString('id-ID'));
     const tempData = dataPoints.map(d => d.temperature);
@@ -104,11 +103,10 @@ async function fetchHistory() {
 async function sendManualWatering() {
   try {
     commandStatus.textContent = 'Mengirim perintah...';
-    // Gunakan request GET ?setManual=true untuk menghindari error CORS dari POST
-    const commandRes = await fetch(`${API_BASE}?setManual=true`);
-    const result = await commandRes.json();
+    await fetch(`${API_BASE}?setManual=true`, { mode: 'no-cors' });
+    
     commandStatus.textContent = 'Perintah penyiraman dikirim!';
-    refreshDashboard(); // Refresh data untuk melihat perubahan status
+    refreshDashboard();
     setTimeout(() => { commandStatus.textContent = ''; }, 5000);
   } catch (err) {
     commandStatus.textContent = 'Gagal mengirim perintah';
@@ -145,9 +143,8 @@ if (deleteBtn) {
     deleteBtn.addEventListener('click', async () => {
         if (confirm('Apakah Anda yakin ingin menghapus semua data histori?')) {
             try {
-                // Endpoint ini perlu dikonfigurasi di Google Apps Script (tambahkan logika ?clear=true)
-                const res = await fetch(`${API_BASE}?clear=true`);
-                alert('Berhasil mengirim perintah hapus data. Silakan tunggu beberapa saat.');
+                await fetch(`${API_BASE}?clear=true`, { mode: 'no-cors' });
+                alert('Berhasil mengirim perintah hapus data. Pastikan App Script sudah diperbarui.');
                 setTimeout(refreshDashboard, 2000);
             } catch (err) {
                 console.error('Error deleting data:', err);
@@ -166,5 +163,4 @@ waterBtn.addEventListener('click', sendManualWatering);
 downloadBtn.addEventListener('click', exportCSV);
 
 refreshDashboard();
-// Update interval diperlama menjadi 5 menit sekali (300000 ms) sesuai permintaan
 setInterval(refreshDashboard, 300000);
