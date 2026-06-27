@@ -104,14 +104,11 @@ async function fetchHistory() {
 async function sendManualWatering() {
   try {
     commandStatus.textContent = 'Mengirim perintah...';
-    const res = await fetch(`${API_BASE}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ command: 'manual' }) 
-    });
+    // Gunakan request GET ?setManual=true untuk menghindari error CORS dari POST
     const commandRes = await fetch(`${API_BASE}?setManual=true`);
     const result = await commandRes.json();
     commandStatus.textContent = 'Perintah penyiraman dikirim!';
+    refreshDashboard(); // Refresh data untuk melihat perubahan status
     setTimeout(() => { commandStatus.textContent = ''; }, 5000);
   } catch (err) {
     commandStatus.textContent = 'Gagal mengirim perintah';
@@ -142,6 +139,24 @@ function exportCSV() {
   document.body.removeChild(link);
 }
 
+const deleteBtn = document.getElementById('deleteDataBtn');
+
+if (deleteBtn) {
+    deleteBtn.addEventListener('click', async () => {
+        if (confirm('Apakah Anda yakin ingin menghapus semua data histori?')) {
+            try {
+                // Endpoint ini perlu dikonfigurasi di Google Apps Script (tambahkan logika ?clear=true)
+                const res = await fetch(`${API_BASE}?clear=true`);
+                alert('Berhasil mengirim perintah hapus data. Silakan tunggu beberapa saat.');
+                setTimeout(refreshDashboard, 2000);
+            } catch (err) {
+                console.error('Error deleting data:', err);
+                alert('Gagal menghapus data');
+            }
+        }
+    });
+}
+
 function refreshDashboard() {
   fetchLatest();
   fetchHistory();
@@ -151,4 +166,5 @@ waterBtn.addEventListener('click', sendManualWatering);
 downloadBtn.addEventListener('click', exportCSV);
 
 refreshDashboard();
-setInterval(refreshDashboard, 5000);
+// Update interval diperlama menjadi 5 menit sekali (300000 ms) sesuai permintaan
+setInterval(refreshDashboard, 300000);

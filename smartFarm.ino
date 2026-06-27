@@ -11,11 +11,11 @@ const char* password = "";
 
 const char* serverUrl = "https://script.google.com/macros/s/AKfycbzZ4FEnN4o4SHkTn_fc2CPLULpmPYibM38WYUSPn6tM1obvKZt_8GORQGaD3C4XY0ga1w/exec";
 
-#define DHTPIN 17
+#define DHTPIN 27
 #define DHTTYPE DHT22
-#define SOIL_PIN 18
-#define SERVO_PIN 16
-#define LED_PIN 2
+#define SOIL_PIN 39
+#define SERVO_PIN 33
+#define LED_PIN 17
 #define OLED_SCL 22
 #define OLED_SDA 21
 
