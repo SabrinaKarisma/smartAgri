@@ -9,10 +9,7 @@
 const char* ssid = "Wi-Fi USM";
 const char* password = "";
 
-const char *serverUrl =
-    "https://script.google.com/macros/s/"
-    "AKfycbzZ4FEnN4o4SHkTn_fc2CPLULpmPYibM38WYUSPn6tM1obvKZt_"
-    "8GORQGaD3C4XY0ga1w/exec";
+const char *serverUrl = "https://script.google.com/macros/s/AKfycbzZ4FEnN4o4SHkTn_fc2CPLULpmPYibM38WYUSPn6tM1obvKZt_8GORQGaD3C4XY0ga1w/exec";
 
 #define DHTPIN 27
 #define DHTTYPE DHT22
@@ -58,7 +55,7 @@ void setup() {
   servo.write(90);
   delay(500);
 
-  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+  if(!display.begin(0x3C, true)) { 
     Serial.println("OLED failed");
     for (;;)
       ;

@@ -28,7 +28,7 @@ void wateringSequence() {
 void displayStatus(String status) {
   display.clearDisplay();
   display.setTextSize(1);
-  display.setTextColor(SSD1306_WHITE);
+  display.setTextColor(SH110X_WHITE);
   display.setCursor(0,0);
   display.println("Smart Watering");
   display.print("Temp: "); display.print(temperature); display.println(" C");

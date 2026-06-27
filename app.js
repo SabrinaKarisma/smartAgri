@@ -50,7 +50,6 @@ async function fetchLatest() {
     soilValue.textContent = data.soil + ' %';
     statusValue.textContent = data.status || 'IDLE';
 
-    // Cek status koneksi ESP: Cek apakah selisih waktu data terakhir lebih dari 360 detik (6 menit)
     const dataTime = new Date(data.timestamp).getTime();
     const now = Date.now();
     const diffMs = now - dataTime;
@@ -116,7 +115,8 @@ async function fetchHistory() {
 async function sendManualWatering() {
   try {
     commandStatus.textContent = 'Mengirim perintah...';
-    await fetch(`${API_BASE}?setManual=true`, { mode: 'no-cors' });
+    const commandRes = await fetch(`${API_BASE}?setManual=true`);
+    const result = await commandRes.json();
     
     commandStatus.textContent = 'Perintah penyiraman dikirim!';
     refreshDashboard();
@@ -154,15 +154,14 @@ const deleteBtn = document.getElementById('deleteDataBtn');
 
 if (deleteBtn) {
     deleteBtn.addEventListener('click', async () => {
-        if (confirm('Apakah Anda yakin ingin menghapus semua data histori?')) {
-            try {
-                await fetch(`${API_BASE}?clear=true`, { mode: 'no-cors' });
-                alert('Berhasil mengirim perintah hapus data. Pastikan App Script sudah diperbarui.');
-                setTimeout(refreshDashboard, 2000);
-            } catch (err) {
-                console.error('Error deleting data:', err);
-                alert('Gagal menghapus data');
-            }
+        try {
+            const res = await fetch(`${API_BASE}?clear=true`);
+            const result = await res.json();
+            alert('Hapus data berhasil diproses server.');
+            refreshDashboard();
+        } catch (err) {
+            console.error('Error deleting data:', err);
+            alert('Gagal menghapus data');
         }
     });
 }

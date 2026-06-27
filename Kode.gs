@@ -32,7 +32,7 @@ function doGet(e) {
     if (val) {
       var lastRow = monitoringSheet.getLastRow();
       if (lastRow > 1) {
-        monitoringSheet.getRange(2, 1, lastRow - 1, 5).clearContent();
+        monitoringSheet.deleteRows(2, lastRow - 1);
       }
       return ContentService.createTextOutput(JSON.stringify({ success: true, message: "Data cleared" }))
              .setMimeType(ContentService.MimeType.JSON);
