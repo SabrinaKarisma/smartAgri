@@ -49,6 +49,19 @@ async function fetchLatest() {
     humValue.textContent = data.humidity + ' %';
     soilValue.textContent = data.soil + ' %';
     statusValue.textContent = data.status || 'IDLE';
+
+    // Cek status koneksi ESP: Cek apakah selisih waktu data terakhir lebih dari 360 detik (6 menit)
+    const dataTime = new Date(data.timestamp).getTime();
+    const now = Date.now();
+    const diffMs = now - dataTime;
+    const isConnected = diffMs < 360000;
+    const connEl = document.getElementById('connectionStatus');
+    if (connEl) {
+       connEl.innerHTML = isConnected 
+           ? '<span style="color: green;">🟢 ESP Connected</span>' 
+           : '<span style="color: red;">🔴 ESP Disconnected</span>';
+    }
+
   } catch (err) {
     console.error('Error fetching latest:', err);
   }
@@ -163,4 +176,4 @@ waterBtn.addEventListener('click', sendManualWatering);
 downloadBtn.addEventListener('click', exportCSV);
 
 refreshDashboard();
-setInterval(refreshDashboard, 300000);
+setInterval(refreshDashboard, 5000);

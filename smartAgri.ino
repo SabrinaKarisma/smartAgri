@@ -3,13 +3,16 @@
 #include <ArduinoJson.h>
 #include <DHT.h>
 #include <ESP32Servo.h> 
-#include <Adafruit_SSD1306.h>
+#include <Adafruit_SH110X.h>
 #include <Adafruit_GFX.h>
 
 const char* ssid = "Wi-Fi USM";
 const char* password = "";
 
-const char* serverUrl = "https://script.google.com/macros/s/AKfycbzZ4FEnN4o4SHkTn_fc2CPLULpmPYibM38WYUSPn6tM1obvKZt_8GORQGaD3C4XY0ga1w/exec";
+const char *serverUrl =
+    "https://script.google.com/macros/s/"
+    "AKfycbzZ4FEnN4o4SHkTn_fc2CPLULpmPYibM38WYUSPn6tM1obvKZt_"
+    "8GORQGaD3C4XY0ga1w/exec";
 
 #define DHTPIN 27
 #define DHTTYPE DHT22
@@ -21,7 +24,7 @@ const char* serverUrl = "https://script.google.com/macros/s/AKfycbzZ4FEnN4o4SHkT
 
 DHT dht(DHTPIN, DHTTYPE);
 Servo servo;                
-Adafruit_SSD1306 display(128, 64, &Wire, -1);
+Adafruit_SH1106G display = Adafruit_SH1106G(128, 64, &Wire);
 
 float temperature = 0;
 float humidity = 0;
@@ -30,17 +33,17 @@ String systemStatus = "IDLE";
 bool wateringInProgress = false;
 bool manualCommand = false;
 unsigned long lastSensorRead = 0;
-const unsigned long sensorInterval = 10000;
+const unsigned long sensorInterval = 300000;
 
-const int dryValue = 4095;   
-const int wetValue = 1500;   
+const int dryValue = 4095;
+const int wetValue = 1500;
 
 void setup() {
   Serial.begin(115200);
-  
+
   pinMode(LED_PIN, OUTPUT);
   digitalWrite(LED_PIN, LOW);
-  
+
   WiFi.begin(ssid, password);
   Serial.print("Connecting");
   while (WiFi.status() != WL_CONNECTED) {
@@ -48,20 +51,21 @@ void setup() {
     Serial.print(".");
   }
   Serial.println(" Connected!");
-  
+
   dht.begin();
-  
+
   servo.attach(SERVO_PIN);
   servo.write(90);
   delay(500);
-  
-  if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+
+  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
     Serial.println("OLED failed");
-    for(;;);
+    for (;;)
+      ;
   }
   display.clearDisplay();
   display.display();
-  
+
   temperature = dht.readTemperature();
   humidity = dht.readHumidity();
   soilMoisture = readSoilMoisture();
@@ -71,10 +75,10 @@ void setup() {
 
 void loop() {
   unsigned long currentMillis = millis();
-  
+
   if (currentMillis - lastSensorRead >= sensorInterval) {
     lastSensorRead = currentMillis;
-    
+
     float t = dht.readTemperature();
     float h = dht.readHumidity();
     if (!isnan(t) && !isnan(h)) {
@@ -82,7 +86,7 @@ void loop() {
       humidity = h;
     }
     soilMoisture = readSoilMoisture();
-    
+
     if (!wateringInProgress && systemStatus != "MANUAL") {
       if (soilMoisture < 30.0 || temperature > 33.0) {
         systemStatus = "AUTO";
@@ -94,7 +98,7 @@ void loop() {
     sendSensorData();
     displayStatus(systemStatus);
   }
-  
+
   static unsigned long lastCommandCheck = 0;
   if (currentMillis - lastCommandCheck >= 5000) {
     lastCommandCheck = currentMillis;
@@ -107,7 +111,7 @@ void loop() {
       displayStatus(systemStatus);
     }
   }
-  
+
   if (WiFi.status() != WL_CONNECTED) {
     WiFi.reconnect();
     delay(1000);

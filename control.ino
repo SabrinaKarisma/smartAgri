@@ -45,6 +45,7 @@ void sendSensorData() {
   if (WiFi.status() != WL_CONNECTED) return;
   HTTPClient http;
   http.begin(serverUrl);
+  http.setFollowRedirects(HTTPC_STRICT_FOLLOW_REDIRECTS);
   http.addHeader("Content-Type", "application/json");
   
   StaticJsonDocument<200> doc;
@@ -70,6 +71,7 @@ void readCommand() {
   HTTPClient http;
   String url = String(serverUrl) + "?command=true";
   http.begin(url);
+  http.setFollowRedirects(HTTPC_STRICT_FOLLOW_REDIRECTS);
   int httpCode = http.GET();
   if (httpCode > 0) {
     String payload = http.getString();
@@ -81,6 +83,9 @@ void readCommand() {
         systemStatus = "MANUAL";
         manualCommand = true;
       }
+    } else {
+      Serial.print("Deserialize error: ");
+      Serial.println(error.c_str());
     }
   }
   http.end();
