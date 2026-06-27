@@ -1,4 +1,4 @@
-const API_BASE = 'https://script.google.com/macros/s/AKfycbzZ4FEnN4o4SHkTn_fc2CPLULpmPYibM38WYUSPn6tM1obvKZt_8GORQGaD3C4XY0ga1w/exec';
+const API_BASE = 'https://script.google.com/macros/s/AKfycbz91aDAZ9DVny5nqCW3q93D5hafNU3VCegEAPcq0u_ikJYgPnpt2rMWl-Hd0HFYZsYKfw/exec';
 
 const tempValue = document.getElementById('tempValue');
 const humValue = document.getElementById('humValue');

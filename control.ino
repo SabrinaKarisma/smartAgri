@@ -14,7 +14,7 @@ void wateringSequence() {
   int angles[] = {30, 60, 90, 120, 150};
   for (int i = 0; i < 5; i++) {
     servo.write(angles[i]);
-    delay(2000);
+    delay(2500);
   }
   servo.write(90);
   delay(500);

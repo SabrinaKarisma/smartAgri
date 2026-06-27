@@ -9,7 +9,7 @@
 const char* ssid = "Wi-Fi USM";
 const char* password = "";
 
-const char *serverUrl = "https://script.google.com/macros/s/AKfycbzZ4FEnN4o4SHkTn_fc2CPLULpmPYibM38WYUSPn6tM1obvKZt_8GORQGaD3C4XY0ga1w/exec";
+const char *serverUrl = "https://script.google.com/macros/s/AKfycbz91aDAZ9DVny5nqCW3q93D5hafNU3VCegEAPcq0u_ikJYgPnpt2rMWl-Hd0HFYZsYKfw/exec";
 
 #define DHTPIN 27
 #define DHTTYPE DHT22
@@ -87,13 +87,17 @@ void loop() {
     if (!wateringInProgress && systemStatus != "MANUAL") {
       if (soilMoisture < 30.0 || temperature > 33.0) {
         systemStatus = "AUTO";
+        displayStatus(systemStatus);
+        sendSensorData(); 
         wateringSequence();
+        systemStatus = "IDLE";
+        displayStatus(systemStatus);
       } else {
         systemStatus = "IDLE";
+        displayStatus(systemStatus);
+        sendSensorData(); 
       }
     }
-    sendSensorData();
-    displayStatus(systemStatus);
   }
 
   static unsigned long lastCommandCheck = 0;
@@ -102,7 +106,21 @@ void loop() {
     readCommand();
     if (manualCommand && !wateringInProgress) {
       systemStatus = "MANUAL";
+      
+      // Update data sensor supaya lebih akurat saat dicatat di log
+      float t = dht.readTemperature();
+      float h = dht.readHumidity();
+      if (!isnan(t) && !isnan(h)) {
+        temperature = t;
+        humidity = h;
+      }
+      soilMoisture = readSoilMoisture();
+
+      displayStatus(systemStatus);
+      sendSensorData(); // Log data masuk ke dashboard dengan status MANUAL
+      
       wateringSequence();
+      
       manualCommand = false;
       systemStatus = "IDLE";
       displayStatus(systemStatus);
