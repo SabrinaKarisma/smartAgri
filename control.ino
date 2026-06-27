@@ -11,13 +11,22 @@ void wateringSequence() {
   wateringInProgress = true;
   digitalWrite(LED_PIN, HIGH);
   
-  int angles[] = {30, 60, 90, 120, 150};
-  for (int i = 0; i < 5; i++) {
-    servo.write(angles[i]);
-    delay(2500);
+  servo.write(30);
+  delay(100); 
+
+  for (int cycle = 0; cycle < 3; cycle++) {
+    for (int angle = 30; angle <= 150; angle++) {
+      servo.write(angle);
+      delay(20); 
+    }
+    for (int angle = 150; angle >= 30; angle--) {
+      servo.write(angle);
+      delay(20);
+    }
   }
+
   servo.write(90);
-  delay(500);
+  delay(100);
   
   digitalWrite(LED_PIN, LOW);
   wateringInProgress = false;

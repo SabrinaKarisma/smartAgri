@@ -38,8 +38,19 @@ const int wetValue = 1500;
 void setup() {
   Serial.begin(115200);
 
+  if(!display.begin(0x3C, true)) { 
+    Serial.println("OLED ERROR");
+    for (;;)
+      ;
+  }
+  display.clearDisplay();
+  display.display();
+  displayStatus("BOOTING");
+  delay(100);
+
   pinMode(LED_PIN, OUTPUT);
-  digitalWrite(LED_PIN, LOW);
+  digitalWrite(LED_PIN, LOW); 
+  delay(50);
 
   WiFi.begin(ssid, password);
   Serial.print("Connecting");
@@ -48,26 +59,19 @@ void setup() {
     Serial.print(".");
   }
   Serial.println(" Connected!");
+  delay(100);
 
-  dht.begin();
+  dht.begin(); delay(100);
 
   servo.attach(SERVO_PIN);
   servo.write(90);
   delay(500);
 
-  if(!display.begin(0x3C, true)) { 
-    Serial.println("OLED failed");
-    for (;;)
-      ;
-  }
-  display.clearDisplay();
-  display.display();
-
   temperature = dht.readTemperature();
   humidity = dht.readHumidity();
   soilMoisture = readSoilMoisture();
-  displayStatus("BOOTING");
   delay(1000);
+  displayStatus("OKE");
 }
 
 void loop() {
@@ -107,7 +111,6 @@ void loop() {
     if (manualCommand && !wateringInProgress) {
       systemStatus = "MANUAL";
       
-      // Update data sensor supaya lebih akurat saat dicatat di log
       float t = dht.readTemperature();
       float h = dht.readHumidity();
       if (!isnan(t) && !isnan(h)) {
@@ -117,7 +120,7 @@ void loop() {
       soilMoisture = readSoilMoisture();
 
       displayStatus(systemStatus);
-      sendSensorData(); // Log data masuk ke dashboard dengan status MANUAL
+      sendSensorData(); 
       
       wateringSequence();
       

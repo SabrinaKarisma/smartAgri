@@ -157,11 +157,11 @@ if (deleteBtn) {
         try {
             const res = await fetch(`${API_BASE}?clear=true`);
             const result = await res.json();
-            alert('Hapus data berhasil diproses server.');
+            // alert('Hapus data berhasil diproses server.');
             refreshDashboard();
         } catch (err) {
             console.error('Error deleting data:', err);
-            alert('Gagal menghapus data');
+            // alert('Gagal menghapus data');
         }
     });
 }
