@@ -56,9 +56,9 @@ async function fetchLatest() {
     const isConnected = diffMs < 360000;
     const connEl = document.getElementById('connectionStatus');
     if (connEl) {
-       connEl.innerHTML = isConnected 
-           ? '<span style="color: green;">🟢 ESP Connected</span>' 
-           : '<span style="color: red;">🔴 ESP Disconnected</span>';
+      connEl.innerHTML = isConnected
+        ? '<span style="color: green;">🟢 ESP Connected</span>'
+        : '<span style="color: red;">🔴 ESP Disconnected</span>';
     }
 
   } catch (err) {
@@ -117,7 +117,7 @@ async function sendManualWatering() {
     commandStatus.textContent = 'Mengirim perintah...';
     const commandRes = await fetch(`${API_BASE}?setManual=true`);
     const result = await commandRes.json();
-    
+
     commandStatus.textContent = 'Perintah penyiraman dikirim!';
     refreshDashboard();
     setTimeout(() => { commandStatus.textContent = ''; }, 5000);
@@ -144,7 +144,7 @@ function exportCSV() {
   const blob = new Blob([csv], { type: 'text/csv' });
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
-  link.download = `data_${new Date().toISOString().slice(0,10)}.csv`;
+  link.download = `data_${new Date().toISOString().slice(0, 10)}.csv`;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -153,17 +153,17 @@ function exportCSV() {
 const deleteBtn = document.getElementById('deleteDataBtn');
 
 if (deleteBtn) {
-    deleteBtn.addEventListener('click', async () => {
-        try {
-            const res = await fetch(`${API_BASE}?clear=true`);
-            const result = await res.json();
-            // alert('Hapus data berhasil diproses server.');
-            refreshDashboard();
-        } catch (err) {
-            console.error('Error deleting data:', err);
-            // alert('Gagal menghapus data');
-        }
-    });
+  deleteBtn.addEventListener('click', async () => {
+    try {
+      const res = await fetch(`${API_BASE}?clear=true`);
+      const result = await res.json();
+      // alert('Hapus data berhasil diproses server.');
+      refreshDashboard();
+    } catch (err) {
+      console.error('Error deleting data:', err);
+      // alert('Gagal menghapus data');
+    }
+  });
 }
 
 function refreshDashboard() {
@@ -175,4 +175,4 @@ waterBtn.addEventListener('click', sendManualWatering);
 downloadBtn.addEventListener('click', exportCSV);
 
 refreshDashboard();
-setInterval(refreshDashboard, 5000);
+setInterval(refreshDashboard, 7000);

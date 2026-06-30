@@ -50,7 +50,7 @@ void displayStatus(String status) {
   display.display();
 }
 
-void sendSensorData() {
+void sendSensorData(bool isLog = false) {
   if (WiFi.status() != WL_CONNECTED) return;
   HTTPClient http;
   http.begin(serverUrl);
@@ -62,6 +62,7 @@ void sendSensorData() {
   doc["humidity"] = humidity;
   doc["soil"] = soilMoisture;
   doc["status"] = systemStatus;
+  doc["isLog"] = isLog;
   
   String jsonString;
   serializeJson(doc, jsonString);
